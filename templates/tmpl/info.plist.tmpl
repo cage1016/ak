@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+	<dict>
+		<key>bundleid</key>
+		<string>{{.BundleID}}</string>
+		{{if ne .Category "Uncategorised"}}
+		<key>category</key>
+		<string>{{.Category}}</string>
+		{{end}}
+		<key>connections</key>
+		<dict>
+		</dict>
+		<key>createdby</key>
+		<string>{{.CreatedBy}}</string>
+		<key>description</key>
+		<string>{{.Description}}</string>
+		<key>disabled</key>
+		<false/>
+		<key>name</key>
+		<string>{{.Name}}</string>
+		<key>objects</key>
+		<array>
+		</array>
+		<key>readme</key>
+		<string/>
+		<key>uidata</key>
+		<dict>
+		</dict>
+		<key>userconfigurationconfig</key>
+		<array>
+		</array>
+		<key>version</key>
+		<string>{{.Version}}</string>
+		<key>webaddress</key>
+		<string>{{.WebAddress}}</string>
+	</dict>
+</plist>
