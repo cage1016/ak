@@ -86,6 +86,14 @@ func (ig *CliItemsGenerator) Generate() error {
 		}
 	}
 
+	{
+		// update-available.png
+		err := fs.NewDefaultFs(".workflow").WriteFile("update-available.png", te.MustAssetString("icons/update-available.png"), viper.GetBool("ak_force"))
+		if err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 

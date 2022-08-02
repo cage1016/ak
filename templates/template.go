@@ -11,7 +11,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-//go:generate go-bindata -pkg=template  -ignore=.go -nomemcopy  tmpl/...
+//go:generate go-bindata -pkg=template -ignore=.go -nomemcopy  tmpl/... icons/...
 
 var engine Engine
 
@@ -19,6 +19,7 @@ type Engine interface {
 	init()
 	Execute(name string, model interface{}) (string, error)
 	ExecuteString(data string, model interface{}) (string, error)
+	MustAssetString(name string) string
 }
 
 type DefaultEngine struct {
@@ -85,6 +86,7 @@ func (e *DefaultEngine) Execute(name string, model interface{}) (string, error) 
 	err = tmp.Execute(ret, model)
 	return ret.String(), err
 }
+
 func (e *DefaultEngine) ExecuteString(data string, model interface{}) (string, error) {
 	tmp, err := e.t.Parse(data)
 	if err != nil {
@@ -93,4 +95,8 @@ func (e *DefaultEngine) ExecuteString(data string, model interface{}) (string, e
 	ret := bytes.NewBufferString("")
 	err = tmp.Execute(ret, model)
 	return ret.String(), err
+}
+
+func (e *DefaultEngine) MustAssetString(name string) string {
+	return MustAssetString(name)
 }
