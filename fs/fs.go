@@ -31,11 +31,11 @@ type DefaultFs struct {
 
 func (f *DefaultFs) init(dir string) {
 	var inFs afero.Fs
-	if viper.GetBool("gk_testing") {
+	if viper.GetBool("ak_testing") {
 		inFs = afero.NewMemMapFs()
 	} else {
-		if viper.GetString("gk_folder") != "" {
-			inFs = afero.NewBasePathFs(afero.NewOsFs(), viper.GetString("gk_folder"))
+		if viper.GetString("ak_folder") != "" {
+			inFs = afero.NewBasePathFs(afero.NewOsFs(), viper.GetString("ak_folder"))
 		} else {
 			inFs = afero.NewOsFs()
 		}
@@ -45,9 +45,9 @@ func (f *DefaultFs) init(dir string) {
 	} else {
 		f.Fs = inFs
 	}
-	if viper.GetBool("gk_testing") {
-		dt, _ := template.Asset("tmpl/gk.json.tmpl")
-		f.WriteFile("gk.json", string(dt), true)
+	if viper.GetBool("ak_testing") {
+		dt, _ := template.Asset("tmpl/ak.json.tmpl")
+		f.WriteFile("ak.json", string(dt), true)
 	}
 }
 func (f *DefaultFs) ReadFile(path string) (string, error) {
@@ -56,8 +56,7 @@ func (f *DefaultFs) ReadFile(path string) (string, error) {
 }
 
 func (f *DefaultFs) WriteFile(path string, data string, force bool) error {
-
-	if b, _ := f.Exists(path); b && !(viper.GetBool("gk_force_override") || force) {
+	if b, _ := f.Exists(path); b && !(viper.GetBool("ak_force") || force) {
 		s, _ := f.ReadFile(path)
 		if s == data {
 			logrus.Warnf("`%s` exists and is identical it will be ignored", path)
@@ -96,7 +95,7 @@ func NewDefaultFs(dir string) *DefaultFs {
 
 func Get() *DefaultFs {
 	if defaultFs == nil {
-		return NewDefaultFs(viper.GetString("gk_folder"))
+		return NewDefaultFs(viper.GetString("ak_folder"))
 	} else {
 		return defaultFs
 	}
