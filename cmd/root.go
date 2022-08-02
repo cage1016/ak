@@ -18,7 +18,7 @@ import (
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "ak",
-	Short: "A generator for awgo that helps you create/update boilerplate code",
+	Short: "A generator for awgo that helps you create boilerplate code",
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()
 	},

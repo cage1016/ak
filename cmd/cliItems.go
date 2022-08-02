@@ -8,7 +8,6 @@ import (
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 
-	"github.com/cage1016/ak/alfred"
 	"github.com/cage1016/ak/generator"
 )
 
@@ -18,8 +17,7 @@ var cliItems = &cobra.Command{
 	Short:   "create a workflow with cobra items feedback",
 	Aliases: []string{"c"},
 	Run: func(cmd *cobra.Command, args []string) {
-		p := alfred.NewAlfred().GetPlist()
-		if err := generator.NewCliItemsGenerator(p).Generate(); err != nil {
+		if err := generator.NewCliItemsGenerator().Generate(); err != nil {
 			logrus.Fatal(err)
 		}
 	},

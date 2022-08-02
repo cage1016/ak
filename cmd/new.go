@@ -11,7 +11,7 @@ import (
 // newCmd represents the add command
 var newCmd = &cobra.Command{
 	Use:     "new",
-	Short:   "Use to create workflow package",
+	Short:   "Used to create workflow package",
 	Aliases: []string{"n"},
 }
 

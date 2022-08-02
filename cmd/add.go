@@ -11,7 +11,7 @@ import (
 // addCmd represents the add command
 var addCmd = &cobra.Command{
 	Use:   "add",
-	Short: "User to add additional components to project",
+	Short: "Used to add additional component to project",
 }
 
 func init() {

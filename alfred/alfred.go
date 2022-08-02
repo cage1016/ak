@@ -122,7 +122,6 @@ type Alfred struct {
 	PrefsDir      string
 	VersionTag    string
 	ZipName       string
-	Plist
 }
 
 func NewAlfred() *Alfred {
@@ -139,13 +138,13 @@ func NewAlfred() *Alfred {
 
 	plistFile := path.Join(a.BuildDir, "info.plist")
 	if fileExists(plistFile) {
-		a.Plist = LoadPlist(plistFile)
-		workflowVersion := a.Plist["version"]
+		plist := LoadPlist(plistFile)
+		workflowVersion := plist["version"]
 		if workflowVersion != nil {
 			a.VersionTag = fmt.Sprintf("-%s", workflowVersion)
 		}
 
-		workflowName := a.Plist["name"]
+		workflowName := plist["name"]
 		if workflowName != nil {
 			a.ZipName = fmt.Sprintf("%s%s.alfredworkflow", strings.ReplaceAll(workflowName.(string), " ", ""), a.VersionTag)
 			logrus.Debugf("zipName: %s", a.ZipName)
@@ -153,10 +152,6 @@ func NewAlfred() *Alfred {
 	}
 
 	return a
-}
-
-func (a *Alfred) GetPlist() Plist {
-	return a.Plist
 }
 
 func (a *Alfred) GetExistingLink() (string, error) {
@@ -349,34 +344,13 @@ func (a *Alfred) Build() error {
 }
 
 func (a *Alfred) Pack() error {
-	// command := flag.NewFlagSet("build", flag.ExitOnError)
-	// help := command.Bool("h", false, "show this message")
-	// outdir := command.String("o", "", "output directory")
-	// command.Parse(os.Args[2:])
-
-	// if *help {
-	// 	logrus.Printf("Showing help")
-	// 	command.PrintDefaults()
-	// 	os.Exit(0)
-	// }
-
-	// logrus.Printf("Packing workflow...")
-
-	// if *outdir != "" {
-	// 	// outdir, _ = filepath.Abs(*outdir)
-
-	// } else {
-	// 	outdir = ".."
-	// }
-
-	pwd, _ := filepath.Abs(".")
-
 	if err := os.Chdir(a.BuildDir); err != nil {
 		return err
 	}
 
-	zipfile := path.Join("..", a.ZipName)
-	logrus.Printf("Creating archive %s", zipfile)
+	pwd, _ := filepath.Abs(".")
+	zipfile := path.Join(pwd, "..", a.ZipName)
+	logrus.Infof("Creating archive %s", zipfile)
 	Run("zip", "-r", zipfile, ".")
 
 	if err := os.Chdir(pwd); err != nil {

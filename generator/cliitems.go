@@ -13,9 +13,7 @@ import (
 	template "github.com/cage1016/ak/templates"
 )
 
-type CliItemsGenerator struct {
-	Plist alfred.Plist
-}
+type CliItemsGenerator struct{}
 
 func (ig *CliItemsGenerator) Generate() error {
 	te := template.NewEngine()
@@ -53,8 +51,8 @@ func (ig *CliItemsGenerator) Generate() error {
 		// generate cmd/root.go
 		m, err := te.Execute("cliitems.root", map[string]interface{}{
 			"GithubRepo":  strings.Replace(viper.GetString("go_mod_package"), "github.com/", "", 1),
-			"Name":        ig.Plist["name"].(string),
-			"Description": ig.Plist["description"].(string),
+			"Name":        viper.GetString("workflow.name"),
+			"Description": viper.GetString("workflow.description"),
 			"Year":        viper.GetString("license.year"),
 			"Author":      viper.GetString("license.name"),
 		})
@@ -74,7 +72,7 @@ func (ig *CliItemsGenerator) Generate() error {
 		}
 
 		m, err = te.Execute("cliitems.update", map[string]interface{}{
-			"Name":   ig.Plist["name"].(string),
+			"Name":   viper.GetString("workflow.name"),
 			"Year":   viper.GetString("license.year"),
 			"Author": viper.GetString("license.name"),
 		})
@@ -91,6 +89,6 @@ func (ig *CliItemsGenerator) Generate() error {
 	return nil
 }
 
-func NewCliItemsGenerator(plist alfred.Plist) *CliItemsGenerator {
-	return &CliItemsGenerator{plist}
+func NewCliItemsGenerator() *CliItemsGenerator {
+	return &CliItemsGenerator{}
 }

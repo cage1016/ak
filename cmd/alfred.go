@@ -11,7 +11,7 @@ import (
 // alfredCmd represents the alfred command
 var alfredCmd = &cobra.Command{
 	Use:   "alfred",
-	Short: "used to manage Go-based Alfred workflows",
+	Short: "Used to manage Go-based Alfred workflows",
 }
 
 func init() {
