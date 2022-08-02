@@ -1,5 +1,5 @@
 /*
-Copyright © 2022 NAME HERE <EMAIL ADDRESS>
+Copyright © 2022 KAI CHU CHUNG <cage.chung@gmail.com>
 
 */
 package cmd
@@ -7,7 +7,12 @@ package cmd
 import (
 	"os"
 
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
+
+	"github.com/cage1016/ak/fs"
+	template "github.com/cage1016/ak/templates"
 )
 
 // rootCmd represents the base command when called without any subcommands
@@ -29,13 +34,59 @@ func Execute() {
 }
 
 func init() {
-	// Here you will define your flags and configuration settings.
-	// Cobra supports persistent flags, which, if defined here,
-	// will be global for your application.
+	cobra.OnInitialize(initConfig)
 
-	// rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.ak.yaml)")
+	rootCmd.PersistentFlags().Bool("testing", false, "If testing the generator.")
+	rootCmd.PersistentFlags().BoolP("debug", "d", false, "If you want to se the debug logs.")
+	rootCmd.PersistentFlags().BoolP("force", "f", false, "Force overwrite existing files without asking.")
+	rootCmd.PersistentFlags().String("folder", "", "If you want to specify the base folder of the workflow.")
+	viper.BindPFlag("gk_testing", rootCmd.PersistentFlags().Lookup("testing"))
+	viper.BindPFlag("ak_folder", rootCmd.PersistentFlags().Lookup("folder"))
+	viper.BindPFlag("ak_force", rootCmd.PersistentFlags().Lookup("force"))
+	viper.BindPFlag("ak_debug", rootCmd.PersistentFlags().Lookup("debug"))
+}
 
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
-	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+func initConfig() {
+	initViperDefaults()
+	viper.SetFs(fs.NewDefaultFs("").Fs)
+	viper.SetConfigFile("ak.json")
+	if viper.GetBool("ak_debug") {
+		logrus.SetLevel(logrus.DebugLevel)
+	} else {
+		logrus.SetLevel(logrus.InfoLevel)
+	}
+	if err := viper.ReadInConfig(); err == nil {
+		logrus.Debug("Using config file:", viper.ConfigFileUsed())
+	} else {
+		logrus.Info("No config file found initializing the project with the default config file.")
+		te := template.NewEngine()
+		st, err := te.Execute("ak.json", nil)
+		if err != nil {
+			logrus.Panic(err)
+		}
+		err = fs.Get().WriteFile("ak.json", st, false)
+		if err != nil {
+			logrus.Panic(err)
+		}
+		initConfig()
+	}
+}
+
+func initViperDefaults() {
+	viper.SetDefault("go_mod_package", "")
+
+	viper.SetDefault("workflow.folder", ".workflow")
+	viper.SetDefault("workflow.name", "")
+	viper.SetDefault("workflow.category", "")
+	viper.SetDefault("workflow.description", "")
+	viper.SetDefault("workflow.bundle_id", "")
+	viper.SetDefault("workflow.created_by", "")
+	viper.SetDefault("workflow.web_address", "")
+	viper.SetDefault("workflow.version", "0.1.0")
+
+	viper.SetDefault("update.github_repo", "")
+
+	viper.SetDefault("license.type", "")
+	viper.SetDefault("license.year", "")
+	viper.SetDefault("license.name", "")
 }
