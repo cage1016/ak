@@ -46,16 +46,6 @@ func (vg *VarsArgsGenerator) Generate() error {
 		return err
 	}
 
-	// license
-	o, err := alfred.RunWithOutput("license", "-year", viper.GetString("license.year"), "-name", viper.GetString("license.name"), viper.GetString("license.type"))
-	if err != nil {
-		return err
-	}
-	err = defaultFs.WriteFile("LICENSE", o, viper.GetBool("ak_force"))
-	if err != nil {
-		return err
-	}
-
 	return nil
 }
 
