@@ -1,0 +1,14 @@
+/*
+Copyright © {{.Year}} {{.Author}}
+*/
+package main
+
+import (
+	_ "github.com/joho/godotenv/autoload"
+
+	"{{.GoModPackage}}/cmd"
+)
+
+func main() {
+	cmd.Execute()
+}
