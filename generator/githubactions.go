@@ -16,7 +16,7 @@ func (gg *GithubActionGenerator) Generate() error {
 	te := template.NewEngine()
 	defaultFs := fs.Get()
 
-	m, err := te.Execute("release.yaml", map[string]interface{}{
+	m, err := te.Execute("release.yml", map[string]interface{}{
 		"WorkflowName": strings.ReplaceAll(viper.GetString("workflow.name"), " ", ""),
 	})
 	if err != nil {
@@ -29,7 +29,7 @@ func (gg *GithubActionGenerator) Generate() error {
 		return err
 	}
 
-	err = fs.NewDefaultFs(".github/workflows").WriteFile("release.yaml", m, viper.GetBool("ak_force"))
+	err = fs.NewDefaultFs(".github/workflows").WriteFile("release.yml", m, viper.GetBool("ak_force"))
 	if err != nil {
 		return err
 	}
