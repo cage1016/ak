@@ -1,0 +1,23 @@
+{
+    "go_mod_package": "github.com/cage1016/ak-test",
+    "workflow": {
+        "folder": ".workflow",
+        "name": "Ak Test",
+        "description": "",
+        "category_comment": "category: Tools, Internet, Productivity, Uncategorised",
+        "category": "",
+        "bundle_id": "com.kaichu.aktest",
+        "created_by": "KAI CHU CHUNG",
+        "web_address": "https://github.com/cage1016/ak-test",
+        "version": "0.1"
+    },
+    "update": {
+        "github_repo": "https://github.com/cage1016/ak-test"
+    },
+    "license": {
+        "type_comment": "support license https://github.com/nishanths/license",
+        "type": "mit",
+        "year": "2022",
+        "name": "KAI CHU CHUNG <cage.chung@gmail.com> (https://kaichu.io)"
+    }
+}
