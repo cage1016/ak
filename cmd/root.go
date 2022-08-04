@@ -22,6 +22,7 @@ var rootCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()
 	},
+	Version: "0.1.0",
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -36,6 +37,7 @@ func Execute() {
 func init() {
 	cobra.OnInitialize(initConfig)
 
+	rootCmd.SetVersionTemplate("ak version {{.Version}}\n")
 	rootCmd.PersistentFlags().Bool("testing", false, "If testing the generator.")
 	rootCmd.PersistentFlags().BoolP("debug", "d", false, "If you want to se the debug logs.")
 	rootCmd.PersistentFlags().BoolP("force", "f", false, "Force overwrite existing files without asking.")
