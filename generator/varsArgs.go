@@ -57,9 +57,19 @@ func GoModGenerator() {
 	}
 }
 
+func VerifyWorkflowFolder() {
+	defaultFs := fs.Get()
+	if b, _ := defaultFs.Exists(viper.GetString("workflow.folder")); !b {
+		logrus.Fatalf("workflow folder does not exist: %s", viper.GetString("workflow.folder"))
+	}
+}
+
 func (vg *VarsArgsGenerator) Generate() error {
 	te := template.NewEngine()
 	defaultFs := fs.Get()
+
+	// workflow folder
+	VerifyWorkflowFolder()
 
 	// go mod
 	GoModGenerator()

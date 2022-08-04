@@ -16,6 +16,9 @@ func (ig *CliItemsGenerator) Generate() error {
 	te := template.NewEngine()
 	defaultFs := fs.Get()
 
+	// workflow folder
+	VerifyWorkflowFolder()
+
 	// go mod
 	GoModGenerator()
 
