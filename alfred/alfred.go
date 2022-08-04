@@ -4,7 +4,6 @@ import (
 	"flag"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"os"
 	"os/exec"
 	"os/user"
@@ -76,19 +75,12 @@ func getAlfredVersion() string {
 
 func getPrefsDirectory() string {
 	currentUser, _ := user.Current()
-
 	version := getAlfredVersion()
-	// prefSuffix := ""
-	// if version != "2" && version != "4" {
-	// 	prefSuffix = "-" + version
-	// }
 
-	prefFile := path.Join(currentUser.HomeDir, "Library", "Preferences",
-		"com.runningwithcrayons.Alfred-Preferences.plist")
+	prefFile := path.Join(currentUser.HomeDir, "Library", "Preferences", "com.runningwithcrayons.Alfred-Preferences.plist")
 	preferences := LoadPlist(prefFile)
 
 	var folder string
-
 	if preferences["syncfolder"] != nil && preferences["syncfolder"] != "" {
 		folder = preferences["syncfolder"].(string)
 		if strings.HasPrefix(folder, "~/") {
@@ -105,11 +97,11 @@ func getPrefsDirectory() string {
 	var info os.FileInfo
 	var err error
 	if info, err = os.Stat(folder); err != nil {
-		panic(err)
+		logrus.Fatalf("creating folder: %s", folder)
 	}
 
 	if !info.IsDir() {
-		panic(fmt.Errorf("%s is not a directory", folder))
+		logrus.Fatalf("%s is not a directory", folder)
 	}
 
 	return folder
@@ -135,7 +127,6 @@ func NewAlfred() *Alfred {
 	logrus.Debugf("workflows path: %s", a.WorkflowsPath)
 
 	a.WorkflowPath, _ = filepath.Abs(".")
-
 	plistFile := path.Join(a.BuildDir, "info.plist")
 	if fileExists(plistFile) {
 		plist := LoadPlist(plistFile)
@@ -237,7 +228,7 @@ func (a *Alfred) Link() error {
 		info := LoadPlist(plistFile)
 		info["disabled"] = true
 		SavePlist(plistFile, info)
-		println("disabled existing install at", existing)
+		logrus.Println("disabled existing install at", existing)
 	}
 
 	uuidgen, _ := exec.Command("uuidgen").Output()
@@ -247,7 +238,7 @@ func (a *Alfred) Link() error {
 	buildPath := path.Join(a.WorkflowPath, a.BuildDir)
 	logrus.Printf("Build path is %s", buildPath)
 	Run("ln", "-s", buildPath, target)
-	println("created link", filepath.Base(target))
+	logrus.Println("created link", filepath.Base(target))
 
 	return nil
 }
@@ -264,7 +255,7 @@ func (a *Alfred) Unlink() error {
 	}
 
 	Run("rm", existing)
-	log.Println("removed link", filepath.Base(existing))
+	logrus.Println("removed link", filepath.Base(existing))
 
 	if existing, err = a.GetExistingInstall(); err != nil {
 		return err
@@ -275,7 +266,7 @@ func (a *Alfred) Unlink() error {
 		info := LoadPlist(plistFile)
 		info["disabled"] = false
 		SavePlist(plistFile, info)
-		log.Println("enabled existing install at", existing)
+		logrus.Println("enabled existing install at", existing)
 	}
 	return nil
 }
@@ -285,7 +276,7 @@ func (a *Alfred) Info() {
 	width := -15
 
 	printField := func(name, value string) {
-		fmt.Printf("%*s %s\n", width, name+":", value)
+		logrus.Printf("%*s %s\n", width, name+":", value)
 	}
 
 	printField("Workflows", a.WorkflowsPath)
@@ -297,6 +288,7 @@ func (a *Alfred) Info() {
 	plistFile := path.Join(a.BuildDir, "info.plist")
 	info := LoadPlist(plistFile)
 	printField("Version", info["version"].(string))
+	printField("WebAddress", info["webaddress"].(string))
 }
 
 func (a *Alfred) Build() error {
@@ -319,14 +311,14 @@ func (a *Alfred) Build() error {
 	cmdAmd64 := exec.Command("go", "build", "-ldflags", "-s -w", "-o", "exe_amd64")
 	cmdAmd64.Env = append(os.Environ(), "GOOS=darwin", "GOARCH=amd64")
 	if output, err := cmdAmd64.CombinedOutput(); err != nil {
-		log.Println(string(output))
-		panic(err)
+		logrus.Println(string(output))
+		logrus.Fatalf("Failed to build amd64 binary: %s", err)
 	}
 	cmdArm64 := exec.Command("go", "build", "-ldflags", "-s -w", "-o", "exe_arm64")
 	cmdArm64.Env = append(os.Environ(), "GOOS=darwin", "GOARCH=arm64")
 	if output, err := cmdArm64.CombinedOutput(); err != nil {
-		log.Println(string(output))
-		panic(err)
+		logrus.Println(string(output))
+		logrus.Fatalf("Failed to build arm64 binary: %s", err)
 	}
 
 	Run(

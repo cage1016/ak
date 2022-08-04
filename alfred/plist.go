@@ -1,9 +1,9 @@
 package alfred
 
 import (
-	"fmt"
 	"io/ioutil"
 
+	"github.com/sirupsen/logrus"
 	"howett.net/plist"
 )
 
@@ -15,11 +15,11 @@ func LoadPlist(filename string) (p Plist) {
 	var err error
 	var xmlData []byte
 	if xmlData, err = ioutil.ReadFile(filename); err != nil {
-		panic(fmt.Errorf("error reading plist file: %s", err))
+		logrus.Fatalf("error reading plist file: %s", err)
 	}
 
 	if _, err = plist.Unmarshal(xmlData, &p); err != nil {
-		panic(err)
+		logrus.Fatalf("error deserializing plist data: %s", err)
 	}
 
 	return
@@ -30,10 +30,10 @@ func SavePlist(filename string, p Plist) {
 	var err error
 	var xmlData []byte
 	if xmlData, err = plist.MarshalIndent(p, plist.XMLFormat, "\t"); err != nil {
-		panic(fmt.Errorf("error serializing plist data: %s", err))
+		logrus.Fatalf("error serializing plist data: %s", err)
 	}
 
 	if err = ioutil.WriteFile(filename, xmlData, 0644); err != nil {
-		panic(err)
+		logrus.Fatalf("error writing plist file: %s", err)
 	}
 }

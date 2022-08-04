@@ -2,8 +2,12 @@ package generator
 
 import (
 	"fmt"
+	"os"
+	"path"
+	"path/filepath"
 
 	"github.com/Songmu/prompter"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 
 	"github.com/cage1016/ak/alfred"
@@ -18,20 +22,47 @@ const (
 
 type VarsArgsGenerator struct{}
 
+func GoModGenerator() {
+	fn := func() {
+		if viper.GetString("ak_folder") != "" {
+			pwd, _ := filepath.Abs(".")
+			if err := os.Chdir(path.Join(pwd, viper.GetString("ak_folder"))); err != nil {
+				logrus.Fatalf("failed to change directory: %s", err)
+			}
+
+			alfred.Run("rm", "-f", goMod, goSum)
+			alfred.Run("go", "mod", "init", viper.GetString("go_mod_package"))
+
+			if err := os.Chdir(".."); err != nil {
+				logrus.Fatalf("failed to change directory: %s", err)
+			}
+		} else {
+			alfred.Run("rm", "-f", goMod, goSum)
+			alfred.Run("go", "mod", "init", viper.GetString("go_mod_package"))
+		}
+	}
+
+	if viper.GetString("go_mod_package") == "" {
+		logrus.Fatalf("ak.json 'go_mod_package' is required")
+	}
+
+	defaultFs := fs.Get()
+	if b, _ := defaultFs.Exists(goMod); b && !viper.GetBool("ak_force") {
+		b := prompter.YN(fmt.Sprintf("`%s` already exists do you want to override it ?", goMod), false)
+		if b {
+			fn()
+		}
+	} else {
+		fn()
+	}
+}
+
 func (vg *VarsArgsGenerator) Generate() error {
 	te := template.NewEngine()
 	defaultFs := fs.Get()
 
-	if b, _ := defaultFs.Exists(goMod); b && !viper.GetBool("ak_force") {
-		b := prompter.YN(fmt.Sprintf("`%s` already exists do you want to override it ?", goMod), false)
-		if b {
-			alfred.Run("rm", "-f", goMod, goSum)
-			alfred.Run("go", "mod", "init", viper.GetString("go_mod_package"))
-		}
-	} else {
-		alfred.Run("rm", "-f", goMod, goSum)
-		alfred.Run("go", "mod", "init", viper.GetString("go_mod_package"))
-	}
+	// go mod
+	GoModGenerator()
 
 	m, err := te.Execute("varsArgs.main", map[string]interface{}{
 		"Year":   viper.GetString("license.year"),

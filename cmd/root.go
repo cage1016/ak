@@ -40,7 +40,7 @@ func init() {
 	rootCmd.PersistentFlags().BoolP("debug", "d", false, "If you want to se the debug logs.")
 	rootCmd.PersistentFlags().BoolP("force", "f", false, "Force overwrite existing files without asking.")
 	rootCmd.PersistentFlags().String("folder", "", "If you want to specify the base folder of the workflow.")
-	viper.BindPFlag("gk_testing", rootCmd.PersistentFlags().Lookup("testing"))
+	viper.BindPFlag("ak_testing", rootCmd.PersistentFlags().Lookup("testing"))
 	viper.BindPFlag("ak_folder", rootCmd.PersistentFlags().Lookup("folder"))
 	viper.BindPFlag("ak_force", rootCmd.PersistentFlags().Lookup("force"))
 	viper.BindPFlag("ak_debug", rootCmd.PersistentFlags().Lookup("debug"))
@@ -73,20 +73,20 @@ func initConfig() {
 }
 
 func initViperDefaults() {
-	viper.SetDefault("go_mod_package", "")
+	viper.SetDefault("go_mod_package", "github.com/cage1016/aa")
 
 	viper.SetDefault("workflow.folder", ".workflow")
-	viper.SetDefault("workflow.name", "")
+	viper.SetDefault("workflow.name", "aa")
 	viper.SetDefault("workflow.category", "")
 	viper.SetDefault("workflow.description", "")
-	viper.SetDefault("workflow.bundle_id", "")
+	viper.SetDefault("workflow.bundle_id", "com.kaichu.aa")
 	viper.SetDefault("workflow.created_by", "")
 	viper.SetDefault("workflow.web_address", "")
 	viper.SetDefault("workflow.version", "0.1.0")
 
-	viper.SetDefault("update.github_repo", "")
+	viper.SetDefault("update.github_repo", "https://github.com/cage1016/aa")
 
-	viper.SetDefault("license.type", "")
-	viper.SetDefault("license.year", "")
+	viper.SetDefault("license.type", "mit")
+	viper.SetDefault("license.year", "2022")
 	viper.SetDefault("license.name", "")
 }
