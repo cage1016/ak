@@ -3,6 +3,7 @@ package generator
 import (
 	"strings"
 
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 
 	"github.com/cage1016/ak/fs"
@@ -36,6 +37,7 @@ func (ig *ItemsGenerator) Generate() error {
 		if err != nil {
 			return err
 		}
+		logrus.Debugf("generating main.go")
 	}
 
 	{
@@ -44,6 +46,7 @@ func (ig *ItemsGenerator) Generate() error {
 		if err != nil {
 			return err
 		}
+		logrus.Debugf("generating update-available.png")
 	}
 
 	return nil

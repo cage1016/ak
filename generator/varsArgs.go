@@ -31,14 +31,20 @@ func GoModGenerator() {
 			}
 
 			alfred.Run("rm", "-f", goMod, goSum)
+			logrus.Debugf("removed go mod and go sum")
+
 			alfred.Run("go", "mod", "init", viper.GetString("go_mod_package"))
+			logrus.Debugf("go mod init: %s", viper.GetString("go_mod_package"))
 
 			if err := os.Chdir(".."); err != nil {
 				logrus.Fatalf("failed to change directory: %s", err)
 			}
 		} else {
 			alfred.Run("rm", "-f", goMod, goSum)
+			logrus.Debugf("removed go mod and go sum")
+
 			alfred.Run("go", "mod", "init", viper.GetString("go_mod_package"))
+			logrus.Debugf("go mod init: %s", viper.GetString("go_mod_package"))
 		}
 	}
 
@@ -86,6 +92,7 @@ func (vg *VarsArgsGenerator) Generate() error {
 	if err != nil {
 		return err
 	}
+	logrus.Debugf("generating main.go")
 
 	return nil
 }

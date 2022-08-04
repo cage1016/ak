@@ -58,19 +58,6 @@ func NewEngine() Engine {
 func (e *DefaultEngine) init() {
 	e.t = template.New("default")
 	e.t.Funcs(funcMap())
-	// for n, v := range _bintree.Children["tmpl"].Children["partials"].Children {
-	// 	a, _ := v.Func()
-	// 	_, err := e.t.Parse(
-	// 		fmt.Sprintf(
-	// 			"{{define \"%s\"}} %s {{end}}",
-	// 			strings.Replace(n, ".tmpl", "", 1),
-	// 			string(a.bytes),
-	// 		),
-	// 	)
-	// 	if err != nil {
-	// 		logrus.Panic(err)
-	// 	}
-	// }
 }
 
 func (e *DefaultEngine) Execute(name string, model interface{}) (string, error) {

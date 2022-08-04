@@ -24,15 +24,16 @@ func (gg *GithubActionGenerator) Generate() error {
 	}
 
 	err = defaultFs.MkdirAll(".github/workflows")
-	logrus.Debug("Creating \".github/workflows\"folder")
 	if err != nil {
 		return err
 	}
+	logrus.Debug("Creating \".github/workflows\"folder")
 
 	err = fs.NewDefaultFs(".github/workflows").WriteFile("release.yml", m, viper.GetBool("ak_force"))
 	if err != nil {
 		return err
 	}
+	logrus.Debugf("generating release.yml")
 
 	return nil
 }

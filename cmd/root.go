@@ -58,17 +58,17 @@ func initConfig() {
 		logrus.SetLevel(logrus.InfoLevel)
 	}
 	if err := viper.ReadInConfig(); err == nil {
-		logrus.Debug("Using config file:", viper.ConfigFileUsed())
+		logrus.Debug("using config file:", viper.ConfigFileUsed())
 	} else {
 		logrus.Info("No config file found initializing the project with the default config file.")
 		te := template.NewEngine()
 		st, err := te.Execute("ak.json", nil)
 		if err != nil {
-			logrus.Panic(err)
+			logrus.Fatalf("Failed to generate the default config file: %v", err)
 		}
 		err = fs.Get().WriteFile("ak.json", st, false)
 		if err != nil {
-			logrus.Panic(err)
+			logrus.Fatalf("Failed to write the default config file: %s", err)
 		}
 		initConfig()
 	}

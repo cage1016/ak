@@ -37,6 +37,7 @@ func (ig *CliItemsGenerator) Generate() error {
 		if err != nil {
 			return err
 		}
+		logrus.Debugf("generating main.go")
 	}
 
 	{
@@ -53,15 +54,16 @@ func (ig *CliItemsGenerator) Generate() error {
 		}
 
 		err = defaultFs.MkdirAll("cmd")
-		logrus.Debug("Creating \"cmd\"folder")
 		if err != nil {
 			return err
 		}
+		logrus.Debug("creating cmd folder")
 
 		err = fs.NewDefaultFs("cmd").WriteFile("root.go", m, viper.GetBool("ak_force"))
 		if err != nil {
 			return err
 		}
+		logrus.Debugf("generating cmd/root.go")
 
 		m, err = te.Execute("cliitems.update", map[string]interface{}{
 			"Name":   viper.GetString("workflow.name"),
@@ -76,6 +78,7 @@ func (ig *CliItemsGenerator) Generate() error {
 		if err != nil {
 			return err
 		}
+		logrus.Debugf("generating cmd/update.go")
 	}
 
 	{
@@ -84,6 +87,7 @@ func (ig *CliItemsGenerator) Generate() error {
 		if err != nil {
 			return err
 		}
+		logrus.Debugf("generating update-available.png")
 	}
 
 	return nil
