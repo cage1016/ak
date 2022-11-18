@@ -86,6 +86,9 @@ Use "ak [command] --help" for more information about a command.
             "type": "mit",
             "year": "",
             "name": ""
+        },
+        "gon": {
+            "application_identity": "Developer ID Application: KAI CHU CHUNG"
         }
     }    
     ```
@@ -96,6 +99,7 @@ Use "ak [command] --help" for more information about a command.
    3. `ak new cliItems` create a workflow with cobra items feedback 
 5. Add additional components to the workflow
    1. `ak add githubAction` add Github Action release to project
+      1. `-s true` to enable code sign and notarize
    2. `ak add license` add license to project
 6. Workflow development
    1. `ak alfred build` to build the workflow executable and output it into the ".workflow" subdirectory

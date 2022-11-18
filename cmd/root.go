@@ -22,7 +22,7 @@ var rootCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()
 	},
-	Version: "0.2.0",
+	Version: "0.3.0",
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -91,4 +91,6 @@ func initViperDefaults() {
 	viper.SetDefault("license.type", "mit")
 	viper.SetDefault("license.year", "2022")
 	viper.SetDefault("license.name", "")
+
+	viper.SetDefault("gon.application_identity", "")
 }

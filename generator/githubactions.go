@@ -10,14 +10,23 @@ import (
 	template "github.com/cage1016/ak/templates"
 )
 
-type GithubActionGenerator struct{}
+type GithubActionGeneratorOptions struct {
+	Enabled_Code_Sign_Notarize bool
+}
+
+type GithubActionGenerator struct {
+	Enabled_Code_Sign_Notarize bool
+}
 
 func (gg *GithubActionGenerator) Generate() error {
 	te := template.NewEngine()
 	defaultFs := fs.Get()
 
 	m, err := te.Execute("release.yml", map[string]interface{}{
-		"WorkflowName": strings.ReplaceAll(viper.GetString("workflow.name"), " ", ""),
+		"EnabledCodeSign":     gg.Enabled_Code_Sign_Notarize,
+		"WorkflowName":        strings.ReplaceAll(viper.GetString("workflow.name"), " ", ""),
+		"BundleID":            viper.GetString("workflow.bundle_id"),
+		"ApplicationIdentity": viper.GetString("gon.application_identity"),
 	})
 	if err != nil {
 		return err
@@ -38,6 +47,8 @@ func (gg *GithubActionGenerator) Generate() error {
 	return nil
 }
 
-func NewGithubActionGenerator() *GithubActionGenerator {
-	return &GithubActionGenerator{}
+func NewGithubActionGenerator(opts *GithubActionGeneratorOptions) *GithubActionGenerator {
+	return &GithubActionGenerator{
+		Enabled_Code_Sign_Notarize: opts.Enabled_Code_Sign_Notarize,
+	}
 }

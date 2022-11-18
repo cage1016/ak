@@ -17,7 +17,11 @@ var githubActionCmd = &cobra.Command{
 	Short:   "Add Github Action release to project",
 	Aliases: []string{"ga"},
 	Run: func(cmd *cobra.Command, args []string) {
-		if err := generator.NewGithubActionGenerator().Generate(); err != nil {
+		s, _ := cmd.Flags().GetBool("sign")
+
+		if err := generator.NewGithubActionGenerator(&generator.GithubActionGeneratorOptions{
+			Enabled_Code_Sign_Notarize: s,
+		}).Generate(); err != nil {
 			logrus.Fatal(err)
 		}
 	},
@@ -25,4 +29,5 @@ var githubActionCmd = &cobra.Command{
 
 func init() {
 	addCmd.AddCommand(githubActionCmd)
+	githubActionCmd.PersistentFlags().BoolP("sign", "s", false, "enable code sign and notarize")
 }
