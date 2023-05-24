@@ -15,11 +15,11 @@ func LoadPlist(filename string) (p Plist) {
 	var err error
 	var xmlData []byte
 	if xmlData, err = ioutil.ReadFile(filename); err != nil {
-		logrus.Fatalf("error reading plist file: %s", err)
+		logrus.Fatalf("error reading %s plist file: %s", filename, err)
 	}
 
 	if _, err = plist.Unmarshal(xmlData, &p); err != nil {
-		logrus.Fatalf("error deserializing plist data: %s", err)
+		logrus.Fatalf("error deserializing %s plist data: %s", filename, err)
 	}
 
 	return
@@ -30,10 +30,10 @@ func SavePlist(filename string, p Plist) {
 	var err error
 	var xmlData []byte
 	if xmlData, err = plist.MarshalIndent(p, plist.XMLFormat, "\t"); err != nil {
-		logrus.Fatalf("error serializing plist data: %s", err)
+		logrus.Fatalf("error serializing %s plist data: %s", filename, err)
 	}
 
 	if err = ioutil.WriteFile(filename, xmlData, 0644); err != nil {
-		logrus.Fatalf("error writing plist file: %s", err)
+		logrus.Fatalf("error writing %s plist data: %s", filename, err)
 	}
 }
