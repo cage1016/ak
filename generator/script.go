@@ -20,7 +20,7 @@ const (
 	goSum = "go.sum"
 )
 
-type VarsArgsGenerator struct{}
+type ScriptGenerator struct{}
 
 func GoModGenerator() {
 	fn := func() {
@@ -70,7 +70,7 @@ func VerifyWorkflowFolder() {
 	}
 }
 
-func (vg *VarsArgsGenerator) Generate() error {
+func (vg *ScriptGenerator) Generate() error {
 	te := template.NewEngine()
 	defaultFs := fs.Get()
 
@@ -80,7 +80,7 @@ func (vg *VarsArgsGenerator) Generate() error {
 	// go mod
 	GoModGenerator()
 
-	m, err := te.Execute("varsArgs.main", map[string]interface{}{
+	m, err := te.Execute("script.main", map[string]interface{}{
 		"Year":   viper.GetString("license.year"),
 		"Author": viper.GetString("license.name"),
 	})
@@ -97,6 +97,6 @@ func (vg *VarsArgsGenerator) Generate() error {
 	return nil
 }
 
-func NewVarsArgsGenerator() *VarsArgsGenerator {
-	return &VarsArgsGenerator{}
+func NewScriptGenerator() *ScriptGenerator {
+	return &ScriptGenerator{}
 }
