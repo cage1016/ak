@@ -10,9 +10,9 @@ import (
 	template "github.com/cage1016/ak/templates"
 )
 
-type CliItemsGenerator struct{}
+type ScriptFilterGenerator struct{}
 
-func (ig *CliItemsGenerator) Generate() error {
+func (ig *ScriptFilterGenerator) Generate() error {
 	te := template.NewEngine()
 	defaultFs := fs.Get()
 
@@ -24,7 +24,7 @@ func (ig *CliItemsGenerator) Generate() error {
 
 	{
 		// generate main.go
-		m, err := te.Execute("cliitems.main", map[string]interface{}{
+		m, err := te.Execute("scriptFilter.main", map[string]interface{}{
 			"GoModPackage": viper.GetString("go_mod_package"),
 			"Year":         viper.GetString("license.year"),
 			"Author":       viper.GetString("license.name"),
@@ -42,7 +42,7 @@ func (ig *CliItemsGenerator) Generate() error {
 
 	{
 		// generate cmd/root.go
-		m, err := te.Execute("cliitems.root", map[string]interface{}{
+		m, err := te.Execute("scriptFilter.root", map[string]interface{}{
 			"GithubRepo":  strings.Replace(viper.GetString("go_mod_package"), "github.com/", "", 1),
 			"Name":        viper.GetString("workflow.name"),
 			"Description": viper.GetString("workflow.description"),
@@ -65,7 +65,7 @@ func (ig *CliItemsGenerator) Generate() error {
 		}
 		logrus.Debugf("generating cmd/root.go")
 
-		m, err = te.Execute("cliitems.update", map[string]interface{}{
+		m, err = te.Execute("scriptFilter.update", map[string]interface{}{
 			"Name":   viper.GetString("workflow.name"),
 			"Year":   viper.GetString("license.year"),
 			"Author": viper.GetString("license.name"),
@@ -93,6 +93,6 @@ func (ig *CliItemsGenerator) Generate() error {
 	return nil
 }
 
-func NewCliItemsGenerator() *CliItemsGenerator {
-	return &CliItemsGenerator{}
+func NewScriptFilterGenerator() *ScriptFilterGenerator {
+	return &ScriptFilterGenerator{}
 }

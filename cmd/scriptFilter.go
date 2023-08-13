@@ -10,18 +10,18 @@ import (
 	"github.com/cage1016/ak/generator"
 )
 
-// cliItems represents the cobra command
-var cliItems = &cobra.Command{
-	Use:     "cliItems",
-	Short:   "create a workflow with cobra items feedback",
+// scriptFilterCmd represents the cobra command
+var scriptFilterCmd = &cobra.Command{
+	Use:     "scriptFilter",
+	Short:   "create scriptFilter items feedback",
 	Aliases: []string{"c"},
 	Run: func(cmd *cobra.Command, args []string) {
-		if err := generator.NewCliItemsGenerator().Generate(); err != nil {
+		if err := generator.NewScriptFilterGenerator().Generate(); err != nil {
 			logrus.Fatal(err)
 		}
 	},
 }
 
 func init() {
-	newCmd.AddCommand(cliItems)
+	newCmd.AddCommand(scriptFilterCmd)
 }

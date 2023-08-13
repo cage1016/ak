@@ -95,8 +95,7 @@ Use "ak [command] --help" for more information about a command.
 
 4. Create one of three different workflow patterns 
    1. `ak new varsArgs` create a workflow with variables and arguments
-   2. `ak new iterms` create a workflow with items feedback
-   3. `ak new cliItems` create a workflow with cobra items feedback 
+   2. `ak new scriptFilter` create scriptFilter items feedback 
 5. Add additional components to the workflow
    1. `ak add githubAction` add Github Action release to project
       1. `-s true` to enable code sign and notarize
@@ -112,7 +111,7 @@ Use "ak [command] --help" for more information about a command.
 
 1. [ak/_examples/varsArgs](https://github.com/cage1016/ak/tree/master/_examples/varsArgs)
 2. [ak/_examples/items](https://github.com/cage1016/ak/tree/master/_examples/items)
-3. [ak/_examples/cliItems](https://github.com/cage1016/ak/tree/master/_examples/cliItems)
+3. [ak/_examples/scriptFilter](https://github.com/cage1016/ak/tree/master/_examples/scriptFilter)
 
 ## License
 This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
