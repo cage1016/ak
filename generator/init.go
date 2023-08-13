@@ -56,6 +56,12 @@ func (pg *InitGenerator) Generate() error {
 		return err
 	}
 
+	dt, _ := template.Asset("tmpl/.gitignore.tmpl")
+	err = defaultFs.WriteFile(".gitignore", string(dt), viper.GetBool("ak_force"))
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
