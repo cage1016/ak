@@ -13,14 +13,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const updateJobName = "checkForUpdate"
+{{if .EnabledAutoUpdate}}const updateJobName = "checkForUpdate"{{end}}
 
 var (
 	repo = "{{.GithubRepo}}"
 	wf   *aw.Workflow
 )
 
-func CheckForUpdate() {
+{{if .EnabledAutoUpdate}}func CheckForUpdate() {
 	if wf.UpdateCheckDue() && !wf.IsRunning(updateJobName) {
 		log.Println("Running update check in background...")
 		cmd := exec.Command(os.Args[0], "update")
@@ -37,14 +37,14 @@ func CheckForUpdate() {
 			Autocomplete("workflow:update").
 			Icon(&aw.Icon{Value: "update-available.png"})
 	}
-}
+}{{end}}
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "{{.Name}}",
 	Short: "{{.Description}}",
 	Run: func(cmd *cobra.Command, args []string) {
-		CheckForUpdate()
+		{{if .EnabledAutoUpdate}}CheckForUpdate(){{end}}
 		wf.SendFeedback()
 	},
 }

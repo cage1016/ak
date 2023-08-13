@@ -14,9 +14,14 @@ import (
 var scriptFilterCmd = &cobra.Command{
 	Use:     "scriptFilter",
 	Short:   "create scriptFilter items feedback",
-	Aliases: []string{"c"},
+	Aliases: []string{"sf"},
 	Run: func(cmd *cobra.Command, args []string) {
-		if err := generator.NewScriptFilterGenerator().Generate(); err != nil {
+		e, err := cmd.Flags().GetBool("enabled-auto-update")
+		if err != nil {
+			logrus.Fatal(err)
+		}
+
+		if err := generator.NewScriptFilterGenerator(e).Generate(); err != nil {
 			logrus.Fatal(err)
 		}
 	},
@@ -24,4 +29,5 @@ var scriptFilterCmd = &cobra.Command{
 
 func init() {
 	newCmd.AddCommand(scriptFilterCmd)
+	scriptFilterCmd.Flags().BoolP("enabled-auto-update", "e", false, "enable auto update")
 }
