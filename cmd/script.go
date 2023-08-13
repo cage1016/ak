@@ -14,7 +14,7 @@ import (
 var scriptCmd = &cobra.Command{
 	Use:     "script",
 	Short:   "create script feedback",
-	Aliases: []string{"v"},
+	Aliases: []string{"s"},
 	Run: func(cmd *cobra.Command, args []string) {
 		if err := generator.NewScriptGenerator().Generate(); err != nil {
 			logrus.Fatal(err)
