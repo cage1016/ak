@@ -64,21 +64,13 @@ func GoModGenerator() {
 }
 
 func VerifyWorkflowFolder() {
-	defaultFs := fs.Get()
-	if b, _ := defaultFs.Exists(viper.GetString("workflow.folder")); !b {
+	if b, _ := fs.Get().Exists(viper.GetString("workflow.folder")); !b {
 		logrus.Fatalf("workflow folder does not exist: %s", viper.GetString("workflow.folder"))
 	}
 }
 
 func (vg *ScriptGenerator) Generate() error {
 	te := template.NewEngine()
-	defaultFs := fs.Get()
-
-	// workflow folder
-	VerifyWorkflowFolder()
-
-	// go mod
-	GoModGenerator()
 
 	m, err := te.Execute("script.main", map[string]interface{}{
 		"Year":   viper.GetString("license.year"),
@@ -88,11 +80,17 @@ func (vg *ScriptGenerator) Generate() error {
 		return err
 	}
 
-	err = defaultFs.WriteFile("main.go", m, viper.GetBool("ak_force"))
+	err = fs.Get().WriteFile("main.go", m, viper.GetBool("ak_force"))
 	if err != nil {
 		return err
 	}
 	logrus.Debugf("generating main.go")
+
+	// workflow folder
+	VerifyWorkflowFolder()
+
+	// go mod
+	GoModGenerator()
 
 	return nil
 }

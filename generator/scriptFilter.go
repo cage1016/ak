@@ -16,16 +16,9 @@ type ScriptFilterGenerator struct {
 
 func (ig *ScriptFilterGenerator) Generate() error {
 	te := template.NewEngine()
-	defaultFs := fs.Get()
 
-	// workflow folder
-	VerifyWorkflowFolder()
-
-	// go mod
-	GoModGenerator()
-
+	// generate main.go
 	{
-		// generate main.go
 		m, err := te.Execute("scriptFilter.main", map[string]interface{}{
 			"GoModPackage": viper.GetString("go_mod_package"),
 			"Year":         viper.GetString("license.year"),
@@ -35,15 +28,16 @@ func (ig *ScriptFilterGenerator) Generate() error {
 			return err
 		}
 
-		err = defaultFs.WriteFile("main.go", m, viper.GetBool("ak_force"))
+		err = fs.Get().WriteFile("main.go", m, viper.GetBool("ak_force"))
 		if err != nil {
+			logrus.Debugf("generating main.go, err: %v", err)
 			return err
 		}
 		logrus.Debugf("generating main.go")
 	}
 
+	// generate cmd/root.go
 	{
-		// generate cmd/root.go
 		m, err := te.Execute("scriptFilter.root", map[string]interface{}{
 			"EnabledAutoUpdate": ig.EnabledAutoUpdate,
 			"GithubRepo":        strings.Replace(viper.GetString("go_mod_package"), "github.com/", "", 1),
@@ -56,13 +50,13 @@ func (ig *ScriptFilterGenerator) Generate() error {
 			return err
 		}
 
-		err = defaultFs.MkdirAll("cmd")
+		err = fs.Get().MkdirAll("cmd")
 		if err != nil {
 			return err
 		}
 		logrus.Debug("creating cmd folder")
 
-		err = fs.NewDefaultFs("cmd").WriteFile("root.go", m, viper.GetBool("ak_force"))
+		err = fs.Get().WriteFile("cmd/root.go", m, viper.GetBool("ak_force"))
 		if err != nil {
 			return err
 		}
@@ -78,7 +72,7 @@ func (ig *ScriptFilterGenerator) Generate() error {
 				return err
 			}
 
-			err = fs.NewDefaultFs("cmd").WriteFile("update.go", m, viper.GetBool("ak_force"))
+			err = fs.Get().WriteFile("update.go", m, viper.GetBool("ak_force"))
 			if err != nil {
 				return err
 			}
@@ -86,16 +80,23 @@ func (ig *ScriptFilterGenerator) Generate() error {
 		}
 	}
 
+	// generate update-available.png
 	{
 		if ig.EnabledAutoUpdate {
 			// update-available.png
-			err := fs.NewDefaultFs(".workflow").WriteFile("update-available.png", te.MustAssetString("icons/update-available.png"), viper.GetBool("ak_force"))
+			err := fs.Get().WriteFile(".workflow/update-available.png", te.MustAssetString("icons/update-available.png"), viper.GetBool("ak_force"))
 			if err != nil {
 				return err
 			}
 			logrus.Debugf("generating update-available.png")
 		}
 	}
+
+	// workflow folder
+	VerifyWorkflowFolder()
+
+	// go mod
+	GoModGenerator()
 
 	return nil
 }
