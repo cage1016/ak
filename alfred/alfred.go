@@ -97,7 +97,11 @@ func getPrefsDirectory() string {
 	var info os.FileInfo
 	var err error
 	if info, err = os.Stat(folder); err != nil {
-		logrus.Fatalf("creating folder: %s", folder)
+		logrus.Infof("folder %s does not exist, creating it", folder)
+		if err := os.MkdirAll(folder, 0755); err != nil {
+			logrus.Fatalf("creating folder: %s", folder)
+		}
+		info, _ = os.Stat(folder)
 	}
 
 	if !info.IsDir() {
@@ -118,16 +122,23 @@ type Alfred struct {
 
 func NewAlfred() *Alfred {
 	a := &Alfred{
-		BuildDir: viper.GetString("workflow.folder"),
+		BuildDir: func(a, b string) string {
+			pwd, _ := filepath.Abs(".")
+			return path.Join(pwd, a, b)
+		}(viper.GetString("ak_folder"), viper.GetString("workflow.folder")),
 	}
+	logrus.Debugf("build dir: %s", a.BuildDir)
 
 	a.PrefsDir = getPrefsDirectory()
 	logrus.Debugf("prefs dir: %s", a.PrefsDir)
+
 	a.WorkflowsPath = path.Join(a.PrefsDir, "Alfred.alfredpreferences/workflows")
+	a.WorkflowPath, _ = filepath.Abs(".")
 	logrus.Debugf("workflows path: %s", a.WorkflowsPath)
 
-	a.WorkflowPath, _ = filepath.Abs(".")
 	plistFile := path.Join(a.BuildDir, "info.plist")
+	logrus.Debugf("plist file: %s", plistFile)
+
 	if fileExists(plistFile) {
 		plist := LoadPlist(plistFile)
 		workflowVersion := plist["version"]
@@ -336,16 +347,16 @@ func (a *Alfred) Build() error {
 }
 
 func (a *Alfred) Pack() error {
+	logrus.Debugf("Changing directory to %s", a.BuildDir)
 	if err := os.Chdir(a.BuildDir); err != nil {
 		return err
 	}
 
-	pwd, _ := filepath.Abs(".")
-	zipfile := path.Join(pwd, "..", a.ZipName)
+	zipfile := path.Join(a.BuildDir, "..", a.ZipName)
 	logrus.Infof("Creating archive %s", zipfile)
 	Run("zip", "-r", zipfile, ".")
 
-	if err := os.Chdir(pwd); err != nil {
+	if err := os.Chdir(path.Join(a.BuildDir, "..")); err != nil {
 		return err
 	}
 

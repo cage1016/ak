@@ -50,6 +50,7 @@ func (f *DefaultFs) init(dir string) {
 		f.WriteFile("ak.json", string(dt), true)
 	}
 }
+
 func (f *DefaultFs) ReadFile(path string) (string, error) {
 	d, err := afero.ReadFile(f.Fs, path)
 	return string(d), err
@@ -77,15 +78,19 @@ func (f *DefaultFs) Mkdir(path string) error {
 func (f *DefaultFs) MkdirAll(path string) error {
 	return f.Fs.MkdirAll(path, os.ModePerm)
 }
+
 func (f *DefaultFs) FilePathSeparator() string {
 	return afero.FilePathSeparator
 }
+
 func (f *DefaultFs) Exists(path string) (bool, error) {
 	return afero.Exists(f.Fs, path)
 }
+
 func (f *DefaultFs) Walk(root string, fc func(path string, info os.FileInfo, err error) error) error {
 	return afero.Walk(f.Fs, root, fc)
 }
+
 func NewDefaultFs(dir string) *DefaultFs {
 	dfs := &DefaultFs{}
 	dfs.init(dir)

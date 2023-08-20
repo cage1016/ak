@@ -10,18 +10,18 @@ import (
 	"github.com/cage1016/ak/generator"
 )
 
-// licenseCmd represents the license command
-var licenseCmd = &cobra.Command{
-	Use:     "license",
-	Short:   "Add license to project",
-	Aliases: []string{"l"},
+// scriptCmd represents the simple command
+var scriptCmd = &cobra.Command{
+	Use:     "script",
+	Short:   "create script feedback",
+	Aliases: []string{"s"},
 	Run: func(cmd *cobra.Command, args []string) {
-		if err := generator.NewLicenseGenerator().Generate(); err != nil {
+		if err := generator.NewScriptGenerator().Generate(); err != nil {
 			logrus.Fatal(err)
 		}
 	},
 }
 
 func init() {
-	addCmd.AddCommand(licenseCmd)
+	newCmd.AddCommand(scriptCmd)
 }
