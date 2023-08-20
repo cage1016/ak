@@ -5,22 +5,20 @@ package cmd
 
 import (
 	"log"
-	"os"
-	"os/exec"
+	"os"{{if .EnabledAutoUpdate}}"
+	"os/exec"{{end}}
 
 	aw "github.com/deanishe/awgo"
 	"github.com/deanishe/awgo/update"
 	"github.com/spf13/cobra"
 )
-
-{{if .EnabledAutoUpdate}}const updateJobName = "checkForUpdate"{{end}}
-
+{{if .EnabledAutoUpdate}}const updateJobName = "checkForUpdate"
 var (
-	repo = "{{.GithubRepo}}"
+	repo = "xxx/ak-test"
 	wf   *aw.Workflow
 )
 
-{{if .EnabledAutoUpdate}}func CheckForUpdate() {
+func CheckForUpdate() {
 	if wf.UpdateCheckDue() && !wf.IsRunning(updateJobName) {
 		log.Println("Running update check in background...")
 		cmd := exec.Command(os.Args[0], "update")
@@ -37,15 +35,19 @@ var (
 			Autocomplete("workflow:update").
 			Icon(&aw.Icon{Value: "update-available.png"})
 	}
-}{{end}}
-
+}{{else}}
+var (
+	repo = "xxx/ak-test"
+	wf   *aw.Workflow
+)
+{{end}}
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "{{.Name}}",
 	Short: "{{.Description}}",
 	Run: func(cmd *cobra.Command, args []string) {
-		{{if .EnabledAutoUpdate}}CheckForUpdate(){{end}}
-		wf.SendFeedback()
+		{{if .EnabledAutoUpdate}}CheckForUpdate()
+		wf.SendFeedback(){{else}}wf.SendFeedback(){{end}}		
 	},
 }
 
