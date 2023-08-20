@@ -246,9 +246,8 @@ func (a *Alfred) Link() error {
 	uuid := strings.TrimSpace(string(uuidgen))
 	target := path.Join(a.WorkflowsPath, "user.workflow."+string(uuid))
 	logrus.Printf("Creating new link to target %s", target)
-	buildPath := path.Join(a.WorkflowPath, a.BuildDir)
-	logrus.Printf("Build path is %s", buildPath)
-	Run("ln", "-s", buildPath, target)
+	logrus.Printf("Build path is %s", a.BuildDir)
+	Run("ln", "-s", a.BuildDir, target)
 	logrus.Println("created link", filepath.Base(target))
 
 	return nil
