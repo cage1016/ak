@@ -15,19 +15,19 @@ As a Gopher, i want to create a Golang base workflow quickly than sketching it o
    2. leverage [deanishe/awgo](https://github.com/deanishe/awgo) with Alfred items feedback
    3. leverage [deanishe/awgo](https://github.com/deanishe/awgo) and [spf13/cobra](https://github.com/spf13/cobra) with Alfred items feedback
 2. Workflow development
-   1. Build the workflow executable and output it into the ".workflow" subdirectory
+   1. Build the workflow executable and output it into the `.workflow` subdirectory
    2. Display information about the workflow
-   3. Link the ".workflow" subdirectory into Alfred's preferences directory, installing it.
+   3. Link the `.workflow` subdirectory into Alfred's preferences directory, installing it.
    4. Package the workflow for distribution locally
-   5. Unlink the ".workflow" subdirectory from Alfred's preferences directory, uninstalling it.
+   5. Unlink the `.workflow` subdirectory from Alfred's preferences directory, uninstalling it.
 3. Additional patterns
-   1. Add Github Action release to project
+   1. Add Github Action release to project. `-s` enable code sign and notarize
    1. Add license to project
 4. Support `arm64` & `amd64`
 
 ## Installation
 
-With Go 1.17 or higher:
+With Go 1.20 or higher:
 
 ```bash
 go install github.com/cage1016/ak@latest
@@ -101,15 +101,15 @@ Use "ak [command] --help" for more information about a command.
       1. `-s true` to enable code sign and notarize
    2. `ak add license` add license to project
 6. Workflow development
-   1. `ak alfred build` to build the workflow executable and output it into the ".workflow" subdirectory
+   1. `ak alfred build` to build the workflow executable and output it into the `.workflow` subdirectory
    2. `ak alfred info` to display information about the workflow
-   3. `ak alfred link` to link the ".workflow" subdirectory into Alfred's preferences directory, installing it.
+   3. `ak alfred link` to link the `.workflow` subdirectory into Alfred's preferences directory, installing it.
    4. `ak alfred package` to package the workflow for distribution locally
-   5. `ak alfred unlink` to unlink the ".workflow" subdirectory from Alfred's preferences directory, uninstalling it.
+   5. `ak alfred unlink` to unlink the `.workflow` subdirectory from Alfred's preferences directory, uninstalling it.
 
 ## Examples
 
-1. [ak/_examples/script](https://github.com/cage1016/ak/tree/master/_examples/varscriptsArgs)
+1. [ak/_examples/script](https://github.com/cage1016/ak/tree/master/_examples/script)
 2. [ak/_examples/scriptFilter](https://github.com/cage1016/ak/tree/master/_examples/scriptFilter)
 
 ## License
