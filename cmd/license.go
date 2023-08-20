@@ -12,8 +12,9 @@ import (
 
 // licenseCmd represents the license command
 var licenseCmd = &cobra.Command{
-	Use:   "license",
-	Short: "Add license to project",
+	Use:     "license",
+	Short:   "Add license to project",
+	Aliases: []string{"l"},
 	Run: func(cmd *cobra.Command, args []string) {
 		if err := generator.NewLicenseGenerator().Generate(); err != nil {
 			logrus.Fatal(err)
