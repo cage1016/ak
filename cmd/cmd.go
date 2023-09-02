@@ -10,10 +10,10 @@ import (
 	"github.com/cage1016/ak/generator"
 )
 
-// scriptFilterCmd represents the cobra command
-var scriptFilterCmd = &cobra.Command{
-	Use:     "scriptFilter",
-	Short:   "create scriptFilter items feedback",
+// cmdCmd represents the cobra command
+var cmdCmd = &cobra.Command{
+	Use:     "cmd",
+	Short:   "create cobra command",
 	Aliases: []string{"sf"},
 	Run: func(cmd *cobra.Command, args []string) {
 		e, err := cmd.Flags().GetBool("enabled-auto-update")
@@ -21,13 +21,13 @@ var scriptFilterCmd = &cobra.Command{
 			logrus.Fatal(err)
 		}
 
-		if err := generator.NewScriptFilterGenerator(e).Generate(); err != nil {
+		if err := generator.NewCmdGenerator(e).Generate(); err != nil {
 			logrus.Fatal(err)
 		}
 	},
 }
 
 func init() {
-	newCmd.AddCommand(scriptFilterCmd)
-	scriptFilterCmd.Flags().BoolP("enabled-auto-update", "e", false, "enable auto update")
+	newCmd.AddCommand(cmdCmd)
+	cmdCmd.Flags().BoolP("enabled-auto-update", "e", false, "enable auto update")
 }
