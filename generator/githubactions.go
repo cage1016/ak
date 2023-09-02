@@ -38,6 +38,7 @@ func (gg *GithubActionGenerator) Generate() error {
 	// generate release.yml
 	{
 		m, err := te.Execute("release.yml", map[string]interface{}{
+			"ReleaseName":         "Release",
 			"EnabledCodeSign":     gg.Enabled_Code_Sign_Notarize,
 			"WorkflowName":        strings.ReplaceAll(viper.GetString("workflow.name"), " ", ""),
 			"BundleID":            viper.GetString("workflow.bundle_id"),
@@ -58,6 +59,7 @@ func (gg *GithubActionGenerator) Generate() error {
 	// generate with auto update release.yml
 	{
 		m, err := te.Execute("release.yml", map[string]interface{}{
+			"ReleaseName":         "Release_auto_update",
 			"EnabledCodeSign":     gg.Enabled_Code_Sign_Notarize,
 			"WorkflowName":        fmt.Sprintf("%s_auto_update", strings.ReplaceAll(viper.GetString("workflow.name"), " ", "")),
 			"Ldflags":             fmt.Sprintf("-X %s/cmd.EnabledAutoUpdate=true", viper.GetString("go_mod_package")),
