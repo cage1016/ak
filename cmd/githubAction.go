@@ -17,10 +17,7 @@ var githubActionCmd = &cobra.Command{
 	Aliases: []string{"ga"},
 	Run: func(cmd *cobra.Command, args []string) {
 		s, _ := cmd.Flags().GetBool("sign")
-
-		if err := generator.NewGithubActionGenerator(&generator.GithubActionGeneratorOptions{
-			Enabled_Code_Sign_Notarize: s,
-		}).Generate(); err != nil {
+		if err := generator.NewGithubActionGenerator(generator.WithEnabled_Code_Sign_Notarize(s)).Generate(); err != nil {
 			logrus.Fatal(err)
 		}
 	},

@@ -11,12 +11,18 @@ import (
 	"github.com/cage1016/ak/template"
 )
 
-type GithubActionGeneratorOptions struct {
-	Enabled_Code_Sign_Notarize bool
-}
+// type GithubActionGeneratorOptions struct {
+// 	Enabled_Code_Sign_Notarize bool
+// }
 
 type GithubActionGenerator struct {
 	Enabled_Code_Sign_Notarize bool
+}
+
+func WithEnabled_Code_Sign_Notarize(enabled bool) func(*GithubActionGenerator) {
+	return func(g *GithubActionGenerator) {
+		g.Enabled_Code_Sign_Notarize = enabled
+	}
 }
 
 func (gg *GithubActionGenerator) Generate() error {
@@ -71,8 +77,12 @@ func (gg *GithubActionGenerator) Generate() error {
 	return nil
 }
 
-func NewGithubActionGenerator(opts *GithubActionGeneratorOptions) *GithubActionGenerator {
-	return &GithubActionGenerator{
-		Enabled_Code_Sign_Notarize: opts.Enabled_Code_Sign_Notarize,
+func NewGithubActionGenerator(options ...func(*GithubActionGenerator)) *GithubActionGenerator {
+	generator := &GithubActionGenerator{}
+
+	for _, o := range options {
+		o(generator)
 	}
+
+	return generator
 }
