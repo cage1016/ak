@@ -23,6 +23,7 @@ As a Gopher, i want to create a Golang base workflow quickly than sketching it o
 3. Additional patterns
    1. Add Github Action release to project. `-s` enable code sign and notarize
    1. Add license to project
+   2. Add Makefile to project
 4. Support `arm64` & `amd64`
 
 ## Installation
@@ -94,23 +95,22 @@ Use "ak [command] --help" for more information about a command.
     ```
 
 4. Create one of three different workflow patterns 
-   1. `ak new script` create script feedback
-   2. `ak new scriptFilter` create scriptFilter items feedback 
+   1. `ak new cmd` create cobra based workflow
 5. Add additional components to the workflow
    1. `ak add githubAction` add Github Action release to project
-      1. `-s true` to enable code sign and notarize
+      1. `-s` to enable code sign and notarize
    2. `ak add license` add license to project
+   3. `ak add makefile` add Makefile to project
 6. Workflow development
-   1. `ak alfred build` to build the workflow executable and output it into the `.workflow` subdirectory
-   2. `ak alfred info` to display information about the workflow
-   3. `ak alfred link` to link the `.workflow` subdirectory into Alfred's preferences directory, installing it.
-   4. `ak alfred package` to package the workflow for distribution locally
-   5. `ak alfred unlink` to unlink the `.workflow` subdirectory from Alfred's preferences directory, uninstalling it.
+   1. `make build` to build the workflow executable and output it into the `.workflow` subdirectory
+   2. `make info` to display information about the workflow
+   3. `make link` to link the `.workflow` subdirectory into Alfred's preferences directory, installing it.
+   4. `make package` to package the workflow for distribution locally
+   5. `make unlink` to unlink the `.workflow` subdirectory from Alfred's preferences directory, uninstalling it.
 
 ## Examples
 
-1. [ak/_examples/script](https://github.com/cage1016/ak/tree/master/_examples/script)
-2. [ak/_examples/scriptFilter](https://github.com/cage1016/ak/tree/master/_examples/scriptFilter)
+1. [ak/_example](https://github.com/cage1016/ak/tree/master/_example)
 
 ## License
 This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
