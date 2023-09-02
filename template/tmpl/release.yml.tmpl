@@ -35,10 +35,10 @@ jobs:
           # pack
           cd .workflow
           plutil -replace version -string "{{`${{ env.tag }}`}}" info.plist
-          zip -r ../"{{.WorkflowName}}-{{`${{ env.tag }}`}}.alfredworkflow" .
+          zip -r ../"{{.WorkflowName}}-{{`${{ env.tag }}`}}.alfredworkflow{{.WorkaroundExt}}" .
           cd ..
 
-          echo "artifact=$(echo "{{.WorkflowName}}-{{`${{ env.tag }}`}}.alfredworkflow")" >> $GITHUB_ENV{{else}}
+          echo "artifact=$(echo "{{.WorkflowName}}-{{`${{ env.tag }}`}}.alfredworkflow{{.WorkaroundExt}}")" >> $GITHUB_ENV{{else}}
       - name: Import Code-Signing Certificates
         uses: Apple-Actions/import-codesign-certs@v1
         with:
@@ -78,11 +78,11 @@ jobs:
           # pack alfredworkflow
           cd .workflow
           plutil -replace version -string "{{`${{ env.tag }}`}}" info.plist
-          zip -r ../"{{.WorkflowName}}-{{`${{ env.tag }}`}}.alfredworkflow" .
+          zip -r ../"{{.WorkflowName}}-{{`${{ env.tag }}`}}.alfredworkflow{{.WorkaroundExt}}" .
           cd ..
 
           # zip alfredworkflow as zip archive for notarize
-          zip -r "{{.WorkflowName}}-{{`${{ env.tag }}`}}.alfredworkflow.zip" "{{.WorkflowName}}-{{`${{ env.tag }}`}}.alfredworkflow"
+          zip -r "{{.WorkflowName}}-{{`${{ env.tag }}`}}.alfredworkflow.zip" "{{.WorkflowName}}-{{`${{ env.tag }}`}}.alfredworkflow{{.WorkaroundExt}}"
 
           # gon notarize
           cat <<EOF >> notarize.json
@@ -96,7 +96,7 @@ jobs:
           EOF
           gon -log-level=debug -log-json ./notarize.json
 
-          echo "artifact=$(echo "{{.WorkflowName}}-{{`${{ env.tag }}`}}.alfredworkflow")" >> $GITHUB_ENV{{end}}
+          echo "artifact=$(echo "{{.WorkflowName}}-{{`${{ env.tag }}`}}.alfredworkflow{{.WorkaroundExt}}")" >> $GITHUB_ENV{{end}}
       - uses: shogo82148/actions-upload-release-asset@v1
         with:
           upload_url: {{`${{ github.event.release.upload_url }}`}}

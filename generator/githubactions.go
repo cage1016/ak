@@ -42,6 +42,7 @@ func (gg *GithubActionGenerator) Generate() error {
 			"WorkflowName":        strings.ReplaceAll(viper.GetString("workflow.name"), " ", ""),
 			"BundleID":            viper.GetString("workflow.bundle_id"),
 			"ApplicationIdentity": viper.GetString("gon.application_identity"),
+			"WorkaroundExt":       "_", // fix awgo update check multiple release exist
 		})
 		if err != nil {
 			return err
@@ -62,6 +63,7 @@ func (gg *GithubActionGenerator) Generate() error {
 			"Ldflags":             fmt.Sprintf("-X %s/cmd.EnabledAutoUpdate=true", viper.GetString("go_mod_package")),
 			"BundleID":            viper.GetString("workflow.bundle_id"),
 			"ApplicationIdentity": viper.GetString("gon.application_identity"),
+			"WorkaroundExt":       "", // empty for auto update
 		})
 		if err != nil {
 			return err

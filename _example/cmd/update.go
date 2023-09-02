@@ -1,5 +1,5 @@
 /*
-Copyright ©  
+Copyright ©
 */
 package cmd
 
@@ -28,7 +28,7 @@ func CheckForUpdate() {
 			}
 		}
 
-		if wf.UpdateAvailable() || true {
+		if wf.UpdateAvailable() {
 			wf.Configure(aw.SuppressUIDs(true))
 			wf.NewItem("An update is available!").
 				Subtitle("⇥ or ↩ to install update").
