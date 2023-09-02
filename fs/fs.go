@@ -9,7 +9,7 @@ import (
 	"github.com/spf13/afero"
 	"github.com/spf13/viper"
 
-	template "github.com/cage1016/ak/templates"
+	"github.com/cage1016/ak/template"
 )
 
 type FileSystem interface {

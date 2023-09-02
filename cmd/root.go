@@ -11,7 +11,7 @@ import (
 	"github.com/spf13/viper"
 
 	"github.com/cage1016/ak/fs"
-	template "github.com/cage1016/ak/templates"
+	"github.com/cage1016/ak/template"
 )
 
 // rootCmd represents the base command when called without any subcommands
