@@ -118,9 +118,11 @@ type Alfred struct {
 	PrefsDir      string
 	VersionTag    string
 	ZipName       string
+
+	ldflags []string
 }
 
-func NewAlfred() *Alfred {
+func NewAlfred(options ...func(*Alfred)) *Alfred {
 	a := &Alfred{
 		BuildDir: func(a, b string) string {
 			pwd, _ := filepath.Abs(".")
@@ -128,6 +130,10 @@ func NewAlfred() *Alfred {
 		}(viper.GetString("ak_folder"), viper.GetString("workflow.folder")),
 	}
 	logrus.Debugf("build dir: %s", a.BuildDir)
+
+	for _, o := range options {
+		o(a)
+	}
 
 	a.PrefsDir = getPrefsDirectory()
 	logrus.Debugf("prefs dir: %s", a.PrefsDir)
@@ -318,13 +324,30 @@ func (a *Alfred) Build() error {
 	// build steps
 	Run("go", "generate")
 
-	cmdAmd64 := exec.Command("go", "build", "-ldflags", "-s -w", "-o", "exe_amd64")
+	cmdsamd := []string{
+		"build",
+		"-ldflags",
+		"-s -w " + strings.Join(a.ldflags, " "),
+		"-o",
+		"exe_amd64",
+	}
+
+	cmdAmd64 := exec.Command("go", cmdsamd...)
 	cmdAmd64.Env = append(os.Environ(), "GOOS=darwin", "GOARCH=amd64")
 	if output, err := cmdAmd64.CombinedOutput(); err != nil {
 		logrus.Println(string(output))
 		logrus.Fatalf("Failed to build amd64 binary: %s", err)
 	}
-	cmdArm64 := exec.Command("go", "build", "-ldflags", "-s -w", "-o", "exe_arm64")
+
+	cmdsarm := []string{
+		"build",
+		"-ldflags",
+		"-s -w " + strings.Join(a.ldflags, " "),
+		"-o",
+		"exe_arm64",
+	}
+
+	cmdArm64 := exec.Command("go", cmdsarm...)
 	cmdArm64.Env = append(os.Environ(), "GOOS=darwin", "GOARCH=arm64")
 	if output, err := cmdArm64.CombinedOutput(); err != nil {
 		logrus.Println(string(output))
@@ -360,4 +383,10 @@ func (a *Alfred) Pack() error {
 	}
 
 	return nil
+}
+
+func WithLdflags(ldflags ...string) func(*Alfred) {
+	return func(s *Alfred) {
+		s.ldflags = append(s.ldflags, ldflags...)
+	}
 }
