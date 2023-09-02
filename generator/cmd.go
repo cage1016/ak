@@ -22,7 +22,6 @@ const (
 )
 
 type CmdGenerator struct {
-	EnabledAutoUpdate bool
 }
 
 func (ig *CmdGenerator) Generate() error {
@@ -50,12 +49,11 @@ func (ig *CmdGenerator) Generate() error {
 	// generate cmd/root.go
 	{
 		m, err := te.Execute("cmd.root", map[string]interface{}{
-			"EnabledAutoUpdate": ig.EnabledAutoUpdate,
-			"GithubRepo":        strings.Replace(viper.GetString("go_mod_package"), "github.com/", "", 1),
-			"Name":              viper.GetString("workflow.name"),
-			"Description":       viper.GetString("workflow.description"),
-			"Year":              viper.GetString("license.year"),
-			"Author":            viper.GetString("license.name"),
+			"GithubRepo":  strings.Replace(viper.GetString("go_mod_package"), "github.com/", "", 1),
+			"Name":        viper.GetString("workflow.name"),
+			"Description": viper.GetString("workflow.description"),
+			"Year":        viper.GetString("license.year"),
+			"Author":      viper.GetString("license.name"),
 		})
 		if err != nil {
 			return err
@@ -73,34 +71,34 @@ func (ig *CmdGenerator) Generate() error {
 		}
 		logrus.Debugf("generating cmd/root.go")
 
-		if ig.EnabledAutoUpdate {
-			m, err = te.Execute("cmd.update", map[string]interface{}{
-				"Name":   viper.GetString("workflow.name"),
-				"Year":   viper.GetString("license.year"),
-				"Author": viper.GetString("license.name"),
-			})
-			if err != nil {
-				return err
-			}
+	}
 
-			err = fs.Get().WriteFile("update.go", m, viper.GetBool("ak_force"))
-			if err != nil {
-				return err
-			}
-			logrus.Debugf("generating cmd/update.go")
+	// generate cmd/update.go
+	{
+		m, err := te.Execute("cmd.update", map[string]interface{}{
+			"Name":   viper.GetString("workflow.name"),
+			"Year":   viper.GetString("license.year"),
+			"Author": viper.GetString("license.name"),
+		})
+		if err != nil {
+			return err
 		}
+
+		err = fs.Get().WriteFile("cmd/update.go", m, viper.GetBool("ak_force"))
+		if err != nil {
+			return err
+		}
+		logrus.Debugf("generating cmd/update.go")
 	}
 
 	// generate update-available.png
 	{
-		if ig.EnabledAutoUpdate {
-			// update-available.png
-			err := fs.Get().WriteFile(".workflow/update-available.png", te.MustAssetString("icons/update-available.png"), viper.GetBool("ak_force"))
-			if err != nil {
-				return err
-			}
-			logrus.Debugf("generating update-available.png")
+		// update-available.png
+		err := fs.Get().WriteFile(".workflow/update-available.png", te.MustAssetString("icons/update-available.png"), viper.GetBool("ak_force"))
+		if err != nil {
+			return err
 		}
+		logrus.Debugf("generating update-available.png")
 	}
 
 	// workflow folder
@@ -159,8 +157,6 @@ func VerifyWorkflowFolder() {
 	}
 }
 
-func NewCmdGenerator(e bool) *CmdGenerator {
-	return &CmdGenerator{
-		EnabledAutoUpdate: e,
-	}
+func NewCmdGenerator() *CmdGenerator {
+	return &CmdGenerator{}
 }

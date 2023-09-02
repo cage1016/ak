@@ -41,6 +41,15 @@ build: generate ## Build container image
 	pack build ghcr.io/cage1016/ak:0.1.0 --builder gcr.io/buildpacks/builder:v1 --run-image ghcr.io/cage1016/ak-run-image:0.1.0 --env GOOGLE_RUNTIME_VERSION=1.20
 	# docker push ghcr.io/cage1016/ak:0.1.0
 
+.PHONY: 
+t: generate ## Run t
+	rm -rf test
+	mkdir test
+	go run main.go --folder test init
+	go run main.go --folder test new cmd
+	go run main.go --folder test add ga -s
+	go run main.go --folder test add l
+
 .PHONY: help
 help: ## this help
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_0-9-]+:.*?## / {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST) | sort
