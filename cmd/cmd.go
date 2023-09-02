@@ -14,7 +14,7 @@ import (
 var cmdCmd = &cobra.Command{
 	Use:     "cmd",
 	Short:   "create cobra command",
-	Aliases: []string{"sf"},
+	Aliases: []string{"c"},
 	Run: func(cmd *cobra.Command, args []string) {
 		if err := generator.NewCmdGenerator().Generate(); err != nil {
 			logrus.Fatal(err)
