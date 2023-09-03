@@ -17,11 +17,18 @@ import (
 
 type GithubActionGenerator struct {
 	Enabled_Code_Sign_Notarize bool
+	Enabled_Codecov            bool
 }
 
 func WithEnabled_Code_Sign_Notarize(enabled bool) func(*GithubActionGenerator) {
 	return func(g *GithubActionGenerator) {
 		g.Enabled_Code_Sign_Notarize = enabled
+	}
+}
+
+func WithEnabled_Codecov(enabled bool) func(*GithubActionGenerator) {
+	return func(g *GithubActionGenerator) {
+		g.Enabled_Codecov = enabled
 	}
 }
 
@@ -40,6 +47,7 @@ func (gg *GithubActionGenerator) Generate() error {
 		m, err := te.Execute("release.yml", map[string]interface{}{
 			"ReleaseName":         "Release",
 			"EnabledCodeSign":     gg.Enabled_Code_Sign_Notarize,
+			"EnabledCodecov":      gg.Enabled_Codecov,
 			"WorkflowName":        strings.ReplaceAll(viper.GetString("workflow.name"), " ", ""),
 			"Ldflags":             fmt.Sprintf("-X %s/cmd.EnabledAutoUpdate=false", viper.GetString("go_mod_package")),
 			"BundleID":            viper.GetString("workflow.bundle_id"),
@@ -62,6 +70,7 @@ func (gg *GithubActionGenerator) Generate() error {
 		m, err := te.Execute("release.yml", map[string]interface{}{
 			"ReleaseName":         "Release_auto_update",
 			"EnabledCodeSign":     gg.Enabled_Code_Sign_Notarize,
+			"EnabledCodecov":      gg.Enabled_Codecov,
 			"WorkflowName":        fmt.Sprintf("%s_auto_update", strings.ReplaceAll(viper.GetString("workflow.name"), " ", "")),
 			"Ldflags":             fmt.Sprintf("-X %s/cmd.EnabledAutoUpdate=true", viper.GetString("go_mod_package")),
 			"BundleID":            viper.GetString("workflow.bundle_id"),

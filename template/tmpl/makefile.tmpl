@@ -10,6 +10,10 @@ else
 	go generate ./...
 endif
 
+.PHONY: test
+test: ## run tests
+	go test -v -race -cover -coverprofile coverage.txt -covermode=atomic ./...
+
 .PHONY: build
 build: generate ## build the binary
 	ak alfred build -l "$(LDFLAGS)"

@@ -19,7 +19,10 @@ jobs:
         with:
           go-version: {{`${{ matrix.go-version }}`}}
       - name: Run unit tests
-        run: go test -v ./...
+        run: go test -v -race -cover -coverprofile coverage.txt -covermode=atomic ./...{{if eq .EnabledCodecov true}}
+      - name: update codecov
+        run: |
+          CODECOV_TOKEN="{{`${{ secrets.CODECOV_TOKEN }}`}}" bash <(curl -s https://codecov.io/bash){{end}}
       - name: Parse Event
         run: |
           echo "tag=$(jq -r '.release.tag_name' "${GITHUB_EVENT_PATH}" | sed s/^v//)" >> $GITHUB_ENV{{if eq .EnabledCodeSign false}}

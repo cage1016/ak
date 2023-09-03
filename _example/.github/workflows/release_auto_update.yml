@@ -1,4 +1,4 @@
-name: Release
+name: Release_auto_update
 on:
   release:
     types:
@@ -19,7 +19,10 @@ jobs:
         with:
           go-version: ${{ matrix.go-version }}
       - name: Run unit tests
-        run: go test -v ./...
+        go test -v -race -cover -coverprofile coverage.txt -covermode=atomic ./...
+      - name: update codecov
+        run: |
+          CODECOV_TOKEN="${{ secrets.CODECOV_TOKEN }}" bash <(curl -s https://codecov.io/bash)
       - name: Parse Event
         run: |
           echo "tag=$(jq -r '.release.tag_name' "${GITHUB_EVENT_PATH}" | sed s/^v//)" >> $GITHUB_ENV

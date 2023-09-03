@@ -19,7 +19,10 @@ jobs:
         with:
           go-version: ${{ matrix.go-version }}
       - name: Run unit tests
-        run: go test -v ./...
+        go test -v -race -cover -coverprofile coverage.txt -covermode=atomic ./...
+      - name: update codecov
+        run: |
+          CODECOV_TOKEN="${{ secrets.CODECOV_TOKEN }}" bash <(curl -s https://codecov.io/bash)
       - name: Parse Event
         run: |
           echo "tag=$(jq -r '.release.tag_name' "${GITHUB_EVENT_PATH}" | sed s/^v//)" >> $GITHUB_ENV
@@ -37,8 +40,8 @@ jobs:
       - name: Build and pack
         run: |
           # build package
-          GOOS=darwin GOARCH=amd64 go build -ldflags "-s -w" -o exe_amd64
-          GOOS=darwin GOARCH=arm64 go build -ldflags "-s -w" -o exe_arm64
+          GOOS=darwin GOARCH=amd64 go build -ldflags "-s -w -X github.com/xxx/ak-test/cmd.EnabledAutoUpdate=false" -o exe_amd64
+          GOOS=darwin GOARCH=arm64 go build -ldflags "-s -w -X github.com/xxx/ak-test/cmd.EnabledAutoUpdate=false" -o exe_arm64
           lipo -create -output .workflow/exe exe_amd64 exe_arm64
           rm  exe_amd64
           rm  exe_arm64
