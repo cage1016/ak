@@ -41,6 +41,7 @@ func (gg *GithubActionGenerator) Generate() error {
 			"ReleaseName":         "Release",
 			"EnabledCodeSign":     gg.Enabled_Code_Sign_Notarize,
 			"WorkflowName":        strings.ReplaceAll(viper.GetString("workflow.name"), " ", ""),
+			"Ldflags":             fmt.Sprintf("-X %s/cmd.EnabledAutoUpdate=false", viper.GetString("go_mod_package")),
 			"BundleID":            viper.GetString("workflow.bundle_id"),
 			"ApplicationIdentity": viper.GetString("gon.application_identity"),
 			"WorkaroundExt":       "_", // fix awgo update check multiple release exist
