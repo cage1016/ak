@@ -1,0 +1,17 @@
+     - name:  Build and pack
+        run: |{{if .EnabledGolang}}
+          # build package
+          GOOS=darwin GOARCH=amd64 go build -ldflags "-s -w{{if .Ldflags}} {{.Ldflags}}{{end}}" -o exe_amd64
+          GOOS=darwin GOARCH=arm64 go build -ldflags "-s -w{{if .Ldflags}} {{.Ldflags}}{{end}}" -o exe_arm64
+          lipo -create -output .workflow/exe exe_amd64 exe_arm64
+          rm  exe_amd64
+          rm  exe_arm64
+          {{end}}
+          # pack
+          cd .workflow
+          plutil -replace version -string "{{`${{ env.tag }}`}}" info.plist
+          zip -r ../"{{.WorkflowName}}-{{`${{ env.tag }}`}}.alfredworkflow{{.WorkaroundExt}}" .
+          cd ..
+
+          echo "artifact=$(echo "{{.WorkflowName}}-{{`${{ env.tag }}`}}.alfredworkflow{{.WorkaroundExt}}")" >> $GITHUB_ENV{{if and .EnabledCodeSign .EnabledGolang}}
+{{template "step_build_sign" .}}{{end}}
