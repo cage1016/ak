@@ -29,11 +29,11 @@
           # pack alfredworkflow
           cd .workflow
           plutil -replace version -string "{{`${{ env.tag }}`}}" info.plist
-          zip -r ../"{{.WorkflowName}}-{{`${{ env.tag }}`}}.alfredworkflow{{.WorkaroundExt}}" .
+          zip -r ../"{{.WorkflowName}}-{{`${{ env.tag }}`}}.alfredworkflow" .
           cd ..
           
           # zip alfredworkflow as zip archive for notarize
-          zip -r "{{.WorkflowName}}-{{`${{ env.tag }}`}}.alfredworkflow.zip" "{{.WorkflowName}}-{{`${{ env.tag }}`}}.alfredworkflow{{.WorkaroundExt}}"
+          zip -r "{{.WorkflowName}}-{{`${{ env.tag }}`}}.alfredworkflow.zip" "{{.WorkflowName}}-{{`${{ env.tag }}`}}.alfredworkflow"
         
           # gon notarize
           cat <<EOF >> notarize.json
@@ -47,4 +47,4 @@
           EOF
           gon -log-level=debug -log-json ./notarize.json
           
-          echo "artifact=$(echo "{{.WorkflowName}}-{{`${{ env.tag }}`}}.alfredworkflow{{.WorkaroundExt}}")" >> $GITHUB_ENV
+          echo "artifact=$(echo "{{.WorkflowName}}-{{`${{ env.tag }}`}}.alfredworkflow")" >> $GITHUB_ENV
