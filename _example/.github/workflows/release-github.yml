@@ -1,4 +1,4 @@
-name: Release
+name: Github Release
 on:
   release:
     types:
@@ -29,8 +29,8 @@ jobs:
       - name:  Build and pack
         run: |
           # build package
-          GOOS=darwin GOARCH=amd64 go build -ldflags "-s -w -X github.com/xxx/ak-test/cmd.EnabledAutoUpdate=false" -o exe_amd64
-          GOOS=darwin GOARCH=arm64 go build -ldflags "-s -w -X github.com/xxx/ak-test/cmd.EnabledAutoUpdate=false" -o exe_arm64
+          GOOS=darwin GOARCH=amd64 go build -ldflags "-s -w -X github.com/xxx/ak-test/cmd.EnabledAutoUpdate=true" -o exe_amd64
+          GOOS=darwin GOARCH=arm64 go build -ldflags "-s -w -X github.com/xxx/ak-test/cmd.EnabledAutoUpdate=true" -o exe_arm64
           lipo -create -output .workflow/exe exe_amd64 exe_arm64
           rm  exe_amd64
           rm  exe_arm64
@@ -38,10 +38,10 @@ jobs:
           # pack
           cd .workflow
           plutil -replace version -string "${{ env.tag }}" info.plist
-          zip -r ../"AkTest-${{ env.tag }}.alfredworkflow_" .
+          zip -r ../"AkTest_GITHUB-${{ env.tag }}.alfredworkflow" .
           cd ..
 
-          echo "artifact=$(echo "AkTest-${{ env.tag }}.alfredworkflow_")" >> $GITHUB_ENV
+          echo "artifact=$(echo "AkTest_GITHUB-${{ env.tag }}.alfredworkflow")" >> $GITHUB_ENV
       - name: Import Code-Signing Certificates
         uses: Apple-Actions/import-codesign-certs@v1
         with:
@@ -73,17 +73,17 @@ jobs:
           # pack alfredworkflow
           cd .workflow
           plutil -replace version -string "${{ env.tag }}" info.plist
-          zip -r ../"AkTest-${{ env.tag }}.alfredworkflow_" .
+          zip -r ../"AkTest_GITHUB-${{ env.tag }}.alfredworkflow" .
           cd ..
           
           # zip alfredworkflow as zip archive for notarize
-          zip -r "AkTest-${{ env.tag }}.alfredworkflow.zip" "AkTest-${{ env.tag }}.alfredworkflow_"
+          zip -r "AkTest_GITHUB-${{ env.tag }}.alfredworkflow.zip" "AkTest_GITHUB-${{ env.tag }}.alfredworkflow"
         
           # gon notarize
           cat <<EOF >> notarize.json
           {
               "notarize": [{
-                  "path": "${PWD}/AkTest-${{ env.tag }}.alfredworkflow.zip",
+                  "path": "${PWD}/AkTest_GITHUB-${{ env.tag }}.alfredworkflow.zip",
                   "bundle_id": "com.xxx.aktest",
                   "staple": false
               }]
@@ -91,7 +91,7 @@ jobs:
           EOF
           gon -log-level=debug -log-json ./notarize.json
           
-          echo "artifact=$(echo "AkTest-${{ env.tag }}.alfredworkflow_")" >> $GITHUB_ENV  
+          echo "artifact=$(echo "AkTest_GITHUB-${{ env.tag }}.alfredworkflow")" >> $GITHUB_ENV  
       - uses: shogo82148/actions-upload-release-asset@v1
         with:
           upload_url: ${{ github.event.release.upload_url }}
