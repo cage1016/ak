@@ -4,7 +4,7 @@ LDFLAGS ?= -X github.com/xxx/ak-test/cmd.EnabledAutoUpdate=$(ENABLED_AUTO_UPDATE
 HAVE_GO_BINDATA := $(shell command -v go-bindata 2> /dev/null)
 generate: ## go generate
 ifndef HAVE_GO_BINDATA
-	@echo "requires 'go-bindata' (go get -u github.com/kevinburke/go-bindata/go-bindata)"
+	@echo "requires 'go-bindata' (go install github.com/go-bindata/go-bindata/go-bindata@latest)"
 	@exit 1 # fail	
 else
 	go generate ./...
@@ -12,7 +12,7 @@ endif
 
 .PHONY: test
 test: ## run tests
-	go test -v -race -cover -coverprofile coverage.txt -covermode=atomic ./..
+	go test -v -race -cover -coverprofile coverage.txt -covermode=atomic ./...
 
 .PHONY: build
 build: generate ## build the binary
