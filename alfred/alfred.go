@@ -174,14 +174,11 @@ func (a *Alfred) GetExistingLink() (string, error) {
 		return "", err
 	}
 
-	wd, _ := os.Getwd()
-	buildPath := path.Join(wd, a.BuildDir)
-
 	for _, dir := range dirs {
 		if dir.Mode()&os.ModeSymlink == os.ModeSymlink {
 			fullDir := path.Join(a.WorkflowsPath, dir.Name())
 			link, err := filepath.EvalSymlinks(fullDir)
-			if err == nil && link == buildPath {
+			if err == nil && link == a.BuildDir {
 				return fullDir, nil
 			}
 		}
