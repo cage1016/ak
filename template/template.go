@@ -99,5 +99,5 @@ func (e *DefaultEngine) ExecuteString(data string, model interface{}) (string, e
 }
 
 func (e *DefaultEngine) MustAssetString(name string) string {
-	return MustAssetString(name)
+	return string(MustAsset(name))
 }

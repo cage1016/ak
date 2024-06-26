@@ -6,12 +6,11 @@
           lipo -create -output .workflow/exe exe_amd64 exe_arm64
           rm  exe_amd64
           rm  exe_arm64
-          {{end}}
+{{end}}{{if .EnabledCodeSign }}{{template "step_build_sign" .}}{{else}}
           # pack
           cd .workflow
           plutil -replace version -string "{{`${{ env.tag }}`}}" info.plist
           zip -r ../"{{.WorkflowName}}-{{`${{ env.tag }}`}}.alfredworkflow" .
           cd ..
 
-          echo "artifact=$(echo "{{.WorkflowName}}-{{`${{ env.tag }}`}}.alfredworkflow")" >> $GITHUB_ENV{{if and .EnabledCodeSign .EnabledGolang}}
-{{template "step_build_sign" .}}{{end}}
+          echo "artifact=$(echo "{{.WorkflowName}}-{{`${{ env.tag }}`}}.alfredworkflow")" >> $GITHUB_ENV{{end}}

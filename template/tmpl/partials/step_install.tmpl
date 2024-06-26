@@ -7,4 +7,4 @@
         run: go test -v -race -cover -coverprofile coverage.txt -covermode=atomic ./...{{if eq .EnabledCodecov true}}
       - name: update codecov
         run: |
-          CODECOV_TOKEN="{{`${{ secrets.CODECOV_TOKEN }}`}}" bash <(curl -s https://codecov.io/bash){{end}}          
+          CODECOV_TOKEN="{{`${{ secrets.CODECOV_TOKEN }}`}}" bash <(curl -s https://codecov.io/bash){{end}}
