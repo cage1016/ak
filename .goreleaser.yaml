@@ -69,6 +69,10 @@ builds:
     {{- else }}{{ .Arch }}{{ end }}
     {{- if .Arm }}-{{ .Arm }}{{ end }}
   no_unique_dist_dir: true
+  hooks:
+    post:
+      - cmd: ./script/sign '{{ .Path }}'
+        output: true  
 
 archives:
   - format: binary
